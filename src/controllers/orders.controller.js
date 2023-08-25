@@ -2,6 +2,7 @@ import {
   checkCakeExistence,
   checkClientExistence,
   createOrderDB,
+  getAllOrdersDB,
 } from "../repositories/orders.repository.js";
 
 export async function createOrder(req, res) {
@@ -21,3 +22,13 @@ export async function createOrder(req, res) {
     res.status(400).send(error.message);
   }
 }
+
+export async function getAllOrders(req, res) {
+    try {
+      const formattedResult = await getAllOrdersDB();
+      res.send(formattedResult);
+    } catch (err) {
+      res.status(500).send(err.message);
+    }
+  }
+  
