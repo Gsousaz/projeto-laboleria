@@ -4,7 +4,6 @@ import {
 } from "../repositories/cakes.repository.js";
 
 export async function createCake(req, res) {
-  const { name, price, image, description } = req.body;
   try {
     const cakeExists = await checkCakeExistence(req.body);
 
