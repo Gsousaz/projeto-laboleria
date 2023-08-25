@@ -103,7 +103,7 @@ export async function getOrderByIdDB(orderId) {
   );
 
   if (result.rows.length === 0) {
-    return null; // Se não encontrar nenhuma linha, retorna nulo
+    return null;
   }
 
   const row = result.rows[0];
@@ -126,4 +126,35 @@ export async function getOrderByIdDB(orderId) {
     quantity: row.quantity,
     totalPrice: row.totalPrice,
   };
+}
+
+export async function getClientOrdersDB(clientId) {
+  const result = await db.query(
+    `SELECT
+    o.id AS "orderId",
+    o.quantity AS "quantity",
+    o."createdAt" AS "createdAt",
+    o."totalPrice" AS "totalPrice",
+    k.name AS "cakeName"
+    FROM orders o
+    JOIN cakes k ON o."cakeId" = k.id
+    WHERE o."clientId" = $1`,
+    [clientId]
+  );
+
+  if (result.rows.length === 0) {
+    return null;
+  }
+
+  const formattedResult = result.rows.map((row) => {
+    return {
+      orderId: row["orderId"],
+      quantity: row["quantity"],
+      createdAt: row["createdAt"],
+      totalPrice: row["totalPrice"],
+      cakeName: row["cakeName"],
+    };
+  });
+
+  return formattedResult;
 }
