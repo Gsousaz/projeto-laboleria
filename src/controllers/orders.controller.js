@@ -3,6 +3,7 @@ import {
   checkClientExistence,
   createOrderDB,
   getAllOrdersDB,
+  getOrderByIdDB,
 } from "../repositories/orders.repository.js";
 
 export async function createOrder(req, res) {
@@ -24,11 +25,25 @@ export async function createOrder(req, res) {
 }
 
 export async function getAllOrders(req, res) {
-    try {
-      const formattedResult = await getAllOrdersDB();
-      res.send(formattedResult);
-    } catch (err) {
-      res.status(500).send(err.message);
-    }
+  try {
+    const formattedResult = await getAllOrdersDB();
+    res.send(formattedResult);
+  } catch (err) {
+    res.status(500).send(err.message);
   }
-  
+}
+
+export async function getOrderById(req, res) {
+  try {
+    const orderId = req.params.id;
+    const order = await getOrderByIdDB(orderId);
+
+    if (!order) {
+      return res.status(404).send("Pedido não encontrado");
+    }
+
+    res.send(order);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+}
